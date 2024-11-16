@@ -9,3 +9,10 @@ An automated development environment setup tool that uses Ansible playbooks to c
 - 🐍 **Python Environment**: Sets up Python 3.12 using UV package manager
 - 📦 **Node.js Environment**: Installs Node.js (LTS) via fnm and PNPM package manager
 - ⚒️ **Ethereum Development**: Includes Foundry toolkit for Ethereum development
+
+## TODO
+
+- [ ] Add support for .dotfiles
+- [ ] SSH Keys & Various Private Keys
+- [ ] Docker
+- [ ] CLI Tools
