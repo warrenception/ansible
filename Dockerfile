@@ -21,4 +21,4 @@ WORKDIR /home/warrenception
 
 FROM warren
 COPY . .
-CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
+CMD ["sh", "-c", "ansible-playbook $TAGS setup.yml"]
