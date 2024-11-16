@@ -1,0 +1,45 @@
+- hosts: localhost
+  vars:
+      user_home: "{{ lookup('env', 'HOME') }}"
+  become: true
+
+  collections:
+    - community.general
+
+  pre_tasks:
+  - name: Update Apt (Debian/Ubuntu)
+    become: yes
+    apt:
+      force_apt_get: true
+      update_cache: true
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Check if Homebrew is installed (MacOS)
+    stat:
+      path: /opt/homebrew/bin/brew
+    register: homebrew_check
+    when: ansible_os_family == "Darwin"
+
+  - name: Install Homebrew (MacOS)
+    shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    when: 
+      - ansible_os_family == "Darwin"
+      - not homebrew_check.stat.exists
+
+  - name: Update Homebrew (MacOS)
+    community.general.homebrew:
+      update_homebrew: true
+    when: ansible_os_family == "Darwin"
+
+  - name: Install unzip (Debian/Ubuntu)
+    apt:
+      name: unzip
+      state: present
+    when: ansible_os_family == "Debian"
+
+  tasks:
+    - include: tasks/zsh.yml
+    - include: tasks/python.yml
+    - include: tasks/node.yml
+    - include: tasks/ethereum.yml

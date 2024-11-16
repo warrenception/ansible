@@ -1,0 +1,19 @@
+- name: Install Foundry
+  become: no
+  shell: |
+    curl -L https://foundry.paradigm.xyz | bash
+    source $HOME/.bashrc
+    $HOME/.foundry/bin/foundryup
+  args:
+    executable: /bin/bash
+    creates: "{{ user_home }}/.foundry"
+
+- name: Add Foundry to zshrc
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} FOUNDRY PATH"
+    block: |
+      # Add Foundry to PATH
+      export PATH="$HOME/.foundry/bin:$PATH"

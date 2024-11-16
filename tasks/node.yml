@@ -1,0 +1,44 @@
+- name: Install Node.js
+  become: no
+  shell: curl -fsSL https://fnm.vercel.app/install | bash
+  args:
+    creates: "{{ user_home }}/.local/share/fnm/fnm"
+
+- name: Add fnm to shell environment
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} NODE ENVIRONMENT"
+    block: |
+      # Add fnm to PATH
+      export PATH="$HOME/.local/share/fnm:$PATH"
+      eval "$(fnm env --use-on-cd)"
+
+- name: Install Node LTS
+  become: no
+  shell: |
+    . ~/.zshrc && fnm install --lts
+  args:
+    executable: /bin/bash
+    creates: "{{ user_home }}/.local/share/fnm/node-versions"
+
+- name: Install PNPM
+  become: no
+  shell: |
+    export SHELL=/bin/zsh
+    curl -fsSL https://get.pnpm.io/install.sh | sh
+  args:
+    executable: /bin/zsh
+    creates: "{{ user_home }}/.local/share/pnpm"
+
+- name: Add PNPM to zshrc
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} PNPM ENVIRONMENT"
+    block: |
+      # Add PNPM to PATH
+      export PNPM_HOME="$HOME/.local/share/pnpm"
+      export PATH="$PNPM_HOME:$PATH"

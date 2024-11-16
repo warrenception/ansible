@@ -1,0 +1,41 @@
+- name: Install UV
+  become: no
+  shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+  args:
+    creates: "{{ user_home }}/.local/bin/uv"
+
+- name: Add UV to shell environment
+  become: no
+  shell: |
+    . $HOME/.local/bin/env
+  args:
+    executable: /bin/bash
+
+- name: Install Python with UV
+  become: no
+  shell: |
+    . $HOME/.local/bin/env && uv python install 3.12
+  args:
+    executable: /bin/bash
+    creates: "{{ user_home }}/.local/bin/python3.12"
+
+- name: Create Python symlink
+  become: no
+  file:
+    src: "{{ user_home }}/.local/share/uv/python/cpython-3.12.7-linux-aarch64-gnu/bin/python3.12"
+    dest: "{{ user_home }}/.local/bin/python"
+    state: link
+    force: yes
+
+- name: Add UV and Python to zshrc
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} UV AND PYTHON ENVIRONMENT"
+    block: |
+      # Add UV and Python to PATH
+      export PATH="$HOME/.local/bin:$PATH"
+      if [ -f "$HOME/.local/bin/env" ]; then
+        source "$HOME/.local/bin/env"
+      fi

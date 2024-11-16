@@ -1,0 +1,26 @@
+- name: Install ZSH (apt)
+  apt: name=zsh
+  when: ansible_os_family == "Debian"
+
+- name: Install ZSH (brew)
+  homebrew:
+    name: zsh
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Change shell to zsh
+  shell: chsh -s $(which zsh)
+
+- name: Oh-My-Zsh
+  shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > ~/.oh-my-installer && chmod +x ~/.oh-my-installer && ~/.oh-my-installer
+  become_user: warrenception
+
+- name: Install zsh-autosuggestions
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+
+- name: Install zsh-syntax-highlighting
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
