@@ -39,6 +39,7 @@
     when: ansible_os_family == "Debian"
 
   tasks:
+    - include: tasks/ssh.yml
     - include: tasks/zsh.yml
     - include: tasks/python.yml
     - include: tasks/node.yml

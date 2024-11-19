@@ -20,5 +20,6 @@ USER warrenception
 WORKDIR /home/warrenception
 
 FROM warren
-COPY . .
-CMD ["sh", "-c", "ansible-playbook $TAGS setup.yml"]
+COPY . ./ansible
+WORKDIR /home/warrenception/ansible
+CMD ["ansible-playbook", "setup.yml", "--ask-vault-pass"]

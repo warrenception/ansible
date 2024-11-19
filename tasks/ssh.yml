@@ -1,0 +1,36 @@
+- name: Ensure .ssh directory exists
+  file:
+    path: "{{ user_home }}/.ssh"
+    state: directory
+    mode: '0700'
+    owner: "warrenception"
+    group: "warrenception"
+
+- name: Set permissions on vault files
+  file:
+    path: "{{ item }}"
+    mode: '0600'
+    owner: "warrenception"
+    group: "warrenception"
+  become: yes
+  with_items:
+    - "{{ playbook_dir }}/.ssh/id_rsa_kobe.vault"
+    - "{{ playbook_dir }}/.ssh/id_rsa_kobe.pub.vault"
+
+- name: Install ssh private key
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/.ssh/id_rsa_kobe.vault"
+    dest: "{{ user_home }}/.ssh/id_rsa"
+    mode: '0600'
+    owner: "warrenception"
+    group: "warrenception"
+  become: yes
+
+- name: Install ssh public key
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/.ssh/id_rsa_kobe.pub.vault"
+    dest: "{{ user_home }}/.ssh/id_rsa.pub"
+    mode: '0644'
+    owner: "warrenception"
+    group: "warrenception"
+  become: yes
