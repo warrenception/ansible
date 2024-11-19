@@ -41,6 +41,7 @@
   tasks:
     - include: tasks/ssh.yml
     - include: tasks/zsh.yml
+    - include: tasks/rust.yml
     - include: tasks/python.yml
     - include: tasks/node.yml
     - include: tasks/ethereum.yml

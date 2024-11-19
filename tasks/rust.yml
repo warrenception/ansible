@@ -1,0 +1,18 @@
+- name: Install Rust
+  become: no
+  shell: |
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source $HOME/.cargo/env
+  args:
+    executable: /bin/bash
+    creates: "{{ user_home }}/.cargo"
+
+- name: Add Rust to zshrc
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} RUST PATH"
+    block: |
+      # Add Rust to PATH
+      export PATH="$HOME/.cargo/bin:$PATH"

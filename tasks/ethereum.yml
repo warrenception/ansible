@@ -17,3 +17,22 @@
     block: |
       # Add Foundry to PATH
       export PATH="$HOME/.foundry/bin:$PATH"
+
+- name: Install SVM Solidity Version Manager
+  become: no
+  shell: |
+    export PATH="{{ user_home }}/.cargo/bin:$PATH"
+    "{{ user_home }}/.cargo/bin/cargo" install --locked --git https://github.com/alloy-rs/svm-rs/
+  args:
+    executable: /bin/bash
+    creates: "{{ user_home }}/.cargo/bin/svm"
+
+- name: Add SVM to zshrc
+  become: no
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} SVM PATH"
+    block: |
+      # Add SVM to PATH
+      export PATH="$HOME/.cargo/bin:$PATH"
