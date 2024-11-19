@@ -12,7 +12,5 @@ An automated development environment setup tool that uses Ansible playbooks to c
 
 ## TODO
 
-- [ ] Add support for .dotfiles
 - [x] SSH Keys & Various Private Keys
-- [ ] Docker
-- [ ] CLI Tools
+- [x] Docker
