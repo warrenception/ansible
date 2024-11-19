@@ -1,0 +1,44 @@
+- name: Ensure Homebrew is installed
+  become: no
+  when: ansible_facts['os_family'] == "Darwin"
+  shell: |
+    if ! command -v brew &> /dev/null; then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Install Docker Desktop
+  become: no
+  when: ansible_facts['os_family'] == "Darwin"
+  community.general.homebrew_cask:
+    name: docker
+    state: present
+
+- name: Add Docker configuration to zshrc
+  become: no
+  when: ansible_facts['os_family'] == "Darwin"
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    create: yes
+    marker: "# {mark} DOCKER CONFIG"
+    block: |
+      # Docker aliases
+      alias d='docker'
+      alias dc='docker compose'
+      alias dps='docker ps'
+      alias dimg='docker images'
+
+- name: Wait for Docker Desktop to be installed
+  when: ansible_facts['os_family'] == "Darwin"
+  pause:
+    seconds: 5
+
+- name: Print installation complete message
+  when: ansible_facts['os_family'] == "Darwin"
+  debug:
+    msg: |
+      Docker Desktop has been installed. Please:
+      1. Open Docker Desktop from your Applications folder
+      2. Complete the first-time setup
+      3. Accept the terms and conditions when prompted

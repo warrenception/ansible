@@ -45,3 +45,4 @@
     - include: tasks/python.yml
     - include: tasks/node.yml
     - include: tasks/ethereum.yml
+    - include: tasks/docker.yml
